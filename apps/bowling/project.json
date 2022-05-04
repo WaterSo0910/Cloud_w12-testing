@@ -78,6 +78,9 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/apps/bowling"],
       "options": {
+        "coverage": true,
+        "outputFile": "result.json",
+        "json": true,
         "jestConfig": "apps/bowling/jest.config.ts",
         "passWithNoTests": true
       }
