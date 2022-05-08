@@ -1,6 +1,13 @@
-import { PassThrough } from 'stream';
-
 // game.ts
+class Counter<T> {
+  private list: Array<T> = [];
+  constructor(list: Array<T>) {
+    this.list = list;
+  }
+  get total() {
+    return this.list.length;
+  }
+}
 export class Potter {
   private EUR_ONE_BOOK = 8;
   private Discount = {
@@ -10,8 +17,8 @@ export class Potter {
     4: 0.2,
     5: 0.25,
   };
-
   price(books: Array<number>) {
-    PassThrough;
+    const booksCounter = new Counter<number>(books);
+    return this.EUR_ONE_BOOK * booksCounter.total;
   }
 }
