@@ -1,7 +1,7 @@
 // game.ts
 class Counter<T> {
   private list: Array<T> = [];
-  private dict: any = {};
+  public dict: any = {};
   constructor(list: Array<T>) {
     this.list = list;
     list.forEach((element) => {
@@ -16,7 +16,7 @@ class Counter<T> {
     return this.list.length;
   }
   get keys() {
-    return Object.keys(this.dict);
+    return Object.keys(this.dict) || [];
   }
 }
 export class Potter {
@@ -29,12 +29,17 @@ export class Potter {
     5: 0.25,
   };
   price(books: Array<number>) {
-    if (books.length === 0) {
-      return 0;
+    let result = 0;
+    while (books.length != 0) {
+      const booksCounter = new Counter<number>(books);
+      const uniNum = booksCounter.keys.length as number;
+      for (const k of booksCounter.keys.map(Number)) {
+        const index = books.indexOf(k, 0);
+        books.splice(index, 1);
+      }
+      result += this.EUR_ONE_BOOK * (uniNum * (1 - this.Discount[uniNum]));
     }
-    const booksCounter = new Counter<number>(books);
-    const uniNum = booksCounter.keys.length as number;
 
-    return this.EUR_ONE_BOOK * booksCounter.total * (1 - this.Discount[uniNum]);
+    return result;
   }
 }
