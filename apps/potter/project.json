@@ -78,6 +78,9 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/apps/potter"],
       "options": {
+        "coverage": true,
+        "outputFile": "result.json",
+        "json": true,
         "jestConfig": "apps/potter/jest.config.ts",
         "passWithNoTests": true
       }
