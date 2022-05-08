@@ -2,6 +2,8 @@
   "version": 2,
   "projects": {
     "bowling": "apps/bowling",
-    "bowling-e2e": "apps/bowling-e2e"
+    "bowling-e2e": "apps/bowling-e2e",
+    "potter": "apps/potter",
+    "potter-e2e": "apps/potter-e2e"
   }
 }
