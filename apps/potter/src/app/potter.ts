@@ -43,8 +43,6 @@ export class Potter {
 
   price(books: Array<number>) {
     this.books = books;
-    console.log(books);
-
     this.result = 0;
     while (this.books.length !== 0) {
       let booksCounter = new Counter<number>(this.books);
@@ -62,7 +60,6 @@ export class Potter {
   }
 
   private computeResult(uniNum: number) {
-    console.log(uniNum, 1 - this.Discount[uniNum]);
     return this.EUR_ONE_BOOK * (uniNum * (1 - this.Discount[uniNum]));
   }
   private haveToChangeStrategy(uniNum: number): boolean {
