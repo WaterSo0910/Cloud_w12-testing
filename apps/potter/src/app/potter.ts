@@ -1,82 +1,75 @@
 // game.ts
-class Counter<T> {
-  private _list: Array<T> = [];
-  public dict: any = {};
-  constructor(list: Array<T>) {
-    this._list = list;
-    this._list.forEach((element) => {
-      if (!this.dict[element]) {
-        this.dict[element] = 1;
-      } else {
-        this.dict[element] += 1;
-      }
-    });
+export class Counter<T> {
+  private _dict: Map<T, number>;
+  private _arr: Array<T>;
+  constructor(arr: Array<T>) {
+    this._arr = arr;
+    this._dict = this.buildDict(arr);
   }
-  set list(list: Array<T>) {
-    this._list = list;
-    this._list.forEach((element) => {
-      if (!this.dict[element]) {
-        this.dict[element] = 1;
-      } else {
-        this.dict[element] += 1;
-      }
-    });
+  private buildDict(arr: Array<T>): Map<T, number> {
+    const m = new Map<T, number>();
+    for (const x of arr) {
+      const v = m.get(x) || 0;
+      m.set(x, v + 1);
+    }
+    return m;
   }
-  get total() {
-    return this.list.length;
+
+  get keys(): Array<T> {
+    return [...this._dict.keys()];
   }
-  get keys() {
-    return Object.keys(this.dict) || [];
+
+  public most_common(): [T, number][] {
+    let arr = Array.from(this._dict);
+    arr = arr.sort((a, b) => b[1] - a[1]);
+    return arr;
   }
-  mostCommon() {
-    const arr = Object.keys(this.dict).map((obj) => [
-      Number(obj),
-      this.dict[obj],
-    ]);
-    return arr.sort((a, b) => b[1] - a[1]);
+
+  public total(): number {
+    return this._arr.length;
   }
 }
 export class Potter {
   private EUR_ONE_BOOK = 8;
-  private Discount: any = {
+  private Discount = {
     1: 0,
     2: 0.05,
     3: 0.1,
     4: 0.2,
     5: 0.25,
-  };
+  } as { [key: number]: number };
+  private books: Array<number> = [];
+  private result = 0;
+
   price(books: Array<number>) {
-    let result = 0;
-    while (books.length != 0) {
-      console.log(books);
+    this.books = books;
+    console.log(books);
 
-      const booksCounter = new Counter<number>(books);
+    this.result = 0;
+    while (this.books.length !== 0) {
+      let booksCounter = new Counter<number>(this.books);
       let uniNum = booksCounter.keys.length as number;
-      if (books.length > 6 && books.length < 10 && uniNum === 5) {
-        let c = 0;
-
-        for (const jk of booksCounter.keys.map(Number)) {
-          if (c === 0) {
-            uniNum -= 1;
-            c += 1;
-            continue;
-          }
-          c += 1;
-          const k = books.indexOf(booksCounter.mostCommon()[0][0], 0);
-
-          books.splice(k, 1);
-          booksCounter.list = books;
-        }
-      } else {
-        for (const jk of booksCounter.keys.map(Number)) {
-          const k = books.indexOf(booksCounter.mostCommon()[0][0], 0);
-          books.splice(k, 1);
-          booksCounter.list = books;
-        }
+      if (this.haveToChangeStrategy(uniNum)) {
+        uniNum -= 1;
       }
-      console.log(books);
-      result += this.EUR_ONE_BOOK * (uniNum * (1 - this.Discount[uniNum]));
+      for (let i = 0; i < uniNum; i++) {
+        this.removeBookAndUpdate(booksCounter.most_common()[0][0]);
+        booksCounter = new Counter<number>(this.books);
+      }
+      this.result += this.computeResult(uniNum);
     }
-    return result;
+    return this.result;
+  }
+
+  private computeResult(uniNum: number) {
+    console.log(uniNum, 1 - this.Discount[uniNum]);
+    return this.EUR_ONE_BOOK * (uniNum * (1 - this.Discount[uniNum]));
+  }
+  private haveToChangeStrategy(uniNum: number): boolean {
+    return this.books.length > 6 && this.books.length < 10 && uniNum === 5;
+  }
+  private removeBookAndUpdate(item: number) {
+    const k = this.books.indexOf(item, 0);
+    this.books.splice(k, 1);
   }
 }
